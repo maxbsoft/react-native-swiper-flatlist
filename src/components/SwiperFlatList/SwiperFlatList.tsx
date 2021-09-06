@@ -84,7 +84,7 @@ export const SwiperFlatList = React.forwardRef(
     );
 
     const _scrollToIndex = (params: ScrollToIndex, extra: ScrollToIndexInternal) => {
-      const { index: indexToScroll, animated = true, duration = 500 } = params;
+      const { index: indexToScroll, animated = true, duration = 300 } = params;
       const newParams = { animated, index: indexToScroll, duration };
 
       setIgnoreOnMomentumScrollEnd(true);
