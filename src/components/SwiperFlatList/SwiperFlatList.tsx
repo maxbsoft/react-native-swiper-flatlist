@@ -10,7 +10,7 @@ const ITEM_VISIBLE_PERCENT_THRESHOLD = 60;
 
 // TODO: figure out how to use forwardRef with generics
 type T1 = any;
-type ScrollToIndex = { index: number; animated?: boolean };
+type ScrollToIndex = { index: number; animated?: boolean; duration?: boolean; };
 type ScrollToIndexInternal = { useOnChangeIndex: boolean };
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
@@ -84,8 +84,8 @@ export const SwiperFlatList = React.forwardRef(
     );
 
     const _scrollToIndex = (params: ScrollToIndex, extra: ScrollToIndexInternal) => {
-      const { index: indexToScroll, animated = true } = params;
-      const newParams = { animated, index: indexToScroll };
+      const { index: indexToScroll, animated = true, duration = 500 } = params;
+      const newParams = { animated, index: indexToScroll, duration };
 
       setIgnoreOnMomentumScrollEnd(true);
 
