@@ -11,6 +11,7 @@ const ITEM_VISIBLE_PERCENT_THRESHOLD = 60;
 // TODO: figure out how to use forwardRef with generics
 type T1 = any;
 type ScrollToIndex = { index: number; animated?: boolean; duration?: boolean; };
+type ScrollToOffset = { offset: number; animated?: boolean; };
 type ScrollToIndexInternal = { useOnChangeIndex: boolean };
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
@@ -111,6 +112,34 @@ export const SwiperFlatList = React.forwardRef(
       flatListElement?.current?.scrollToIndex(newParams);
     };
 
+    const _scrollToOffset = (params: ScrollToOffset, extra: ScrollToIndexInternal) => {
+      const { offset: offsetToScroll, animated = true } = params;
+      const newParams = { animated, offset: offsetToScroll };
+
+      setIgnoreOnMomentumScrollEnd(true);
+      /*
+      const next = {
+        index: indexToScroll,
+        prevIndex: currentIndexes.index,
+      };
+      if (currentIndexes.index !== next.index && currentIndexes.prevIndex !== next.prevIndex) {
+        setCurrentIndexes({ index: next.index, prevIndex: next.prevIndex });
+      } else if (currentIndexes.index !== next.index) {
+        setCurrentIndexes((prevState) => ({ ...prevState, index: next.index }));
+      } else if (currentIndexes.prevIndex !== next.prevIndex) {
+        setCurrentIndexes((prevState) => ({ ...prevState, prevIndex: next.prevIndex }));
+      }
+
+      if (extra.useOnChangeIndex) {
+        _onChangeIndex({ index: next.index, prevIndex: next.prevIndex });
+      }
+      */
+      // When execute "scrollToIndex", we ignore the method "onMomentumScrollEnd"
+      // because it not working on Android
+      // https://github.com/facebook/react-native/issues/21718
+      flatListElement?.current?.scrollToOffset(newParams);
+    };
+
     // change the index when the user swipe the items
     React.useEffect(() => {
       _onChangeIndex({ index: currentIndexes.index, prevIndex: currentIndexes.prevIndex });
@@ -121,6 +150,11 @@ export const SwiperFlatList = React.forwardRef(
       scrollToIndex: (item: ScrollToIndex) => {
         setScrollEnabled(true);
         _scrollToIndex(item, { useOnChangeIndex: true });
+        setScrollEnabled(!disableGesture);
+      },
+      scrollToOffset: (item: ScrollToOffset) => {
+        setScrollEnabled(true);
+        _scrollToOffset(item, { useOnChangeIndex: false });
         setScrollEnabled(!disableGesture);
       },
       getCurrentIndex: () => currentIndexes.index,
