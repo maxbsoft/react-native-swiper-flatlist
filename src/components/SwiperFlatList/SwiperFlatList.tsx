@@ -116,7 +116,7 @@ export const SwiperFlatList = React.forwardRef(
       const { offset: offsetToScroll, animated = true } = params;
       const newParams = { animated, offset: offsetToScroll };
 
-      setIgnoreOnMomentumScrollEnd(true);
+      // setIgnoreOnMomentumScrollEnd(true);
       /*
       const next = {
         index: indexToScroll,
